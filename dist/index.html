@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#08131f" />
+    <meta name="description" content="대포의 방향을 맞춰 숲을 통과하는 원버튼 체인 액션 퍼즐" />
+    <title>I CAN FLY — 숲속 대포 모험</title>
+    <link rel="stylesheet" href="./woodland.css?v=8" />
+  </head>
+  <body>
+    <main id="app" class="app-shell">
+      <section id="homeScreen" class="screen home-screen active" aria-labelledby="homeTitle">
+        <canvas id="titleCanvas" class="title-canvas" width="480" height="300" aria-hidden="true"></canvas>
+        <div class="title-shade" aria-hidden="true"></div>
+        <div class="home-card">
+          <p class="eyebrow">작은 날갯짓, 아주 긴 모험</p>
+          <h1 id="homeTitle"><span>I CAN</span> FLY</h1>
+          <p class="home-copy">날 수 없는 키위새의 숲속 여행.<br>한 번의 발사로, 다음 모험을 향해.</p>
+          <div class="menu-stack">
+            <button id="startButton" class="menu-button primary" type="button">게임 스타트 <small>GAME START</small></button>
+            <button id="customizeButton" class="menu-button" type="button">캐릭터 꾸미기 <small>CUSTOMIZE</small></button>
+            <button id="settingsButton" class="menu-button" type="button">설정 <small>SETTINGS</small></button>
+          </div>
+          <p class="version-label">WOODLAND EDITION · 11 ROUTES · v0.3</p>
+        </div>
+        <div class="home-caption"><span>CHAPTER 01</span><strong>숲 끝에, 우리 집.</strong></div>
+      </section>
+
+      <section id="stageScreen" class="screen stage-screen" aria-labelledby="stageSelectTitle">
+        <header class="screen-header">
+          <button class="back-button" data-back="home" type="button" aria-label="시작 화면으로 돌아가기">←</button>
+          <div><p class="eyebrow">THE WOODLAND ATLAS</p><h2 id="stageSelectTitle">숲길 고르기</h2></div>
+          <div class="save-summary"><span>획득한 별</span><strong id="totalStars">0 / 3</strong></div>
+        </header>
+        <div class="stage-layout">
+          <section class="stage-grid-panel" aria-label="스테이지 목록">
+            <div class="atlas-heading"><span>여행 수첩</span><small>11개의 숲길 · 모두 플레이 가능</small></div>
+            <div id="stageGrid" class="stage-grid"></div>
+            <div class="map-legend">
+              <span><i class="legend-dot eight"></i>8방향</span>
+              <span><i class="legend-dot four"></i>4방향</span>
+              <span><i class="legend-dot quick"></i>0.5초 발사</span>
+              <span><i class="legend-line ice"></i>얼음 슬라이드</span>
+            </div>
+          </section>
+          <aside id="stageDetail" class="stage-detail" aria-live="polite">
+            <p class="detail-kicker" id="detailBiome">SELECTED ROUTE</p>
+            <div class="detail-title-row"><strong id="detailNumber">01</strong><div><h3 id="detailName">깊은숲 오솔길</h3><p id="detailNote">대포 연결의 기본을 익히세요.</p></div></div>
+            <canvas id="detailMap" width="480" height="190" aria-label="선택한 스테이지 경로"></canvas>
+            <div id="conditionList" class="condition-list"></div>
+            <p class="record-note">별은 한 번의 도전에서 달성한 최고 성적입니다.</p>
+            <div class="record-row"><span>최단 클리어</span><strong id="bestTime">--:--.---</strong></div>
+            <button id="playStageButton" class="menu-button primary play-stage" type="button">이 숲길로 출발 →</button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="customizeScreen" class="screen customize-screen" aria-labelledby="customizeTitle">
+        <header class="screen-header">
+          <button class="back-button" data-back="home" type="button" aria-label="시작 화면으로 돌아가기">←</button>
+          <div><p class="eyebrow">YOUR LITTLE HERO</p><h2 id="customizeTitle">나의 키위새</h2></div>
+        </header>
+        <div class="customize-layout">
+          <section class="character-preview">
+            <canvas id="customKiwi" width="160" height="120" aria-label="선택된 키위새 미리보기"></canvas>
+            <p id="skinName">FOREST KIWI</p>
+          </section>
+          <section class="custom-options">
+            <div><p class="option-title">깃털 색</p><div id="skinOptions" class="swatch-grid"></div></div>
+            <div><p class="option-title">작은 장식</p><div id="hatOptions" class="hat-grid"></div></div>
+            <button id="saveCustomButton" class="menu-button primary" type="button">적용하고 돌아가기</button>
+          </section>
+        </div>
+      </section>
+
+      <section id="settingsScreen" class="screen settings-screen" aria-labelledby="settingsTitle">
+        <header class="screen-header">
+          <button class="back-button" data-back="home" type="button" aria-label="시작 화면으로 돌아가기">←</button>
+          <div><p class="eyebrow">AUDIO &amp; DISPLAY</p><h2 id="settingsTitle">설정</h2></div>
+        </header>
+        <div class="settings-card">
+          <label>MASTER <output id="masterValue">80</output><input id="masterVolume" type="range" min="0" max="100" value="80" /></label>
+          <label>BGM <output id="bgmValue">60</output><input id="bgmVolume" type="range" min="0" max="100" value="60" /></label>
+          <label>SE <output id="seValue">85</output><input id="seVolume" type="range" min="0" max="100" value="85" /></label>
+          <label class="toggle-row"><span>화면 스캔라인</span><input id="scanlineToggle" type="checkbox" /><i></i></label>
+          <p class="settings-help">발사: Space / 화면 터치<br>일시정지: Tab / Esc · 다시하기: R<br>맵을 보는 동안 시간과 게임은 멈춥니다.</p>
+          <button id="saveSettingsButton" class="menu-button primary" type="button">저장</button>
+        </div>
+      </section>
+
+      <section id="gameScreen" class="screen game-screen" aria-label="I CAN FLY 게임">
+        <header class="topbar">
+          <div class="timer-readout"><span>TIME</span><strong id="timerLabel">00:00.000</strong></div>
+          <div class="stage-readout"><span>STAGE</span><strong id="stageLabel">01 · TEST</strong></div>
+          <div class="attempt-readout"><span>TRY</span><strong id="attemptLabel">01</strong></div>
+          <div class="topbar-actions">
+            <div id="starCounter" class="star-counter" aria-label="현재 획득 별">★ <strong>x 0</strong></div>
+            <button id="mapButton" class="hud-button" type="button">맵 보기 <small>M</small></button>
+            <button id="pauseButton" class="icon-button" type="button" aria-label="일시정지">Ⅱ</button>
+          </div>
+        </header>
+
+        <section id="gameFrame" class="game-frame">
+          <canvas id="gameCanvas" width="1280" height="720" aria-label="키위새를 대포에서 대포로 발사하는 게임 화면"></canvas>
+          <div id="scanlines" class="scanlines" aria-hidden="true"></div>
+          <div id="message" class="message" aria-live="polite"></div>
+          <div class="hud-tip" id="hudTip"><kbd>SPACE</kbd><span>또는 화면을 눌러 발사</span></div>
+          <button id="fireButton" class="fire-button" type="button" aria-label="대포 발사"><span class="fire-button__small">SPACE / TAP</span><span>발사 ↗</span></button>
+          <div id="directionHint" class="direction-hint" aria-live="off"></div>
+
+          <div id="pauseOverlay" class="modal-overlay" aria-hidden="true">
+            <section class="pause-panel" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+              <p class="eyebrow">GAME PAUSED</p><h2 id="pauseTitle">일시정지</h2>
+              <div class="pause-actions"><button id="resumeButton" class="menu-button primary" type="button">계속하기</button><button id="pauseRestartButton" class="menu-button" type="button">다시하기</button></div>
+              <div class="pause-sound">
+                <label>MASTER <input id="pauseMaster" type="range" min="0" max="100" /></label>
+                <label>BGM <input id="pauseBgm" type="range" min="0" max="100" /></label>
+                <label>SE <input id="pauseSe" type="range" min="0" max="100" /></label>
+              </div>
+              <button id="exitStageButton" class="menu-button danger" type="button">스테이지 선택으로 나가기</button>
+              <p class="key-help"><kbd>TAB</kbd> 또는 <kbd>ESC</kbd>로 닫기</p>
+            </section>
+          </div>
+
+          <div id="mapOverlay" class="modal-overlay map-overlay" aria-hidden="true">
+            <section class="map-panel" role="dialog" aria-modal="true" aria-labelledby="mapTitle">
+              <header><div><p class="eyebrow">ROUTE PREVIEW</p><h2 id="mapTitle">맵 보기</h2></div><button id="closeMapButton" class="back-button" type="button" aria-label="맵 닫기">×</button></header>
+              <canvas id="mapCanvas" width="1000" height="500" aria-label="전체 스테이지 지도"></canvas>
+              <div class="map-help"><span>● 8방향</span><span>● 4방향</span><span>● 0.5초</span><span>◆ 별</span><span>━ 얼음</span><span>┃ 가시문</span><span>⌂ 집</span></div>
+              <p class="record-note">밝은 테두리가 현재 위치입니다. 별을 모으는 길과 지름길을 살펴보세요.</p>
+            </section>
+          </div>
+          <div id="resultOverlay" class="modal-overlay" aria-hidden="true">
+            <section class="result-panel" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+              <p class="eyebrow">WELCOME HOME</p><h2 id="resultTitle">무사히 도착했어요!</h2>
+              <div id="resultStars" class="result-stars" aria-label="이번 도전의 달성 별"></div>
+              <strong id="resultTime" class="result-time"></strong><p id="resultRecord" class="record-note"></p>
+              <div id="resultConditions" class="condition-list"></div>
+              <button id="nextStageButton" class="menu-button primary" type="button">다음 숲길 →</button>
+              <div class="result-actions"><button id="resultRetryButton" class="menu-button" type="button">한 번 더</button><button id="resultExitButton" class="menu-button" type="button">숲길 선택</button></div>
+            </section>
+          </div>
+        </section>
+
+        <footer class="bottombar">
+          <div class="progress" aria-label="스테이지 진행도"><span id="progressFill"></span></div>
+          <div id="chainLabel" class="chain-label">CANNON 1 / 5</div>
+          <button id="restartButton" class="text-button" type="button">처음부터 <kbd>R</kbd></button>
+        </footer>
+      </section>
+    </main>
+    <script src="./levels.js?v=8"></script>
+    <script src="./core.js?v=8"></script>
+    <script src="./art.js?v=8"></script>
+    <script src="./woodland.js?v=8"></script>
+  </body>
+</html>
