@@ -4,7 +4,7 @@
 
 ## 실행
 
-프로젝트 폴더에서 다음 명령을 실행한 뒤 http://127.0.0.1:4173/ 에 접속합니다.
+프로젝트 폴더에서 다음 명령을 실행한 뒤 https://kuryu6061.github.io/ICANFLY/ 에 접속합니다.
 
 ```powershell
 python -m http.server 4173 --bind 127.0.0.1 --directory dist
